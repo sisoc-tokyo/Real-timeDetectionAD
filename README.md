@@ -8,6 +8,8 @@ Our tool consists of the following steps to reduce false detection rate and supp
 * Step2 (Machine Learning): Use unsupervised machine learning and anomaly detection in order to detect suspicious commands that attackers tend to use as outliers. 
 * Step3 (Real-time alert): Raise real-time alerts using Elastic Stack if attack activities are detected.
 
+<img src="toolSummary.png" alt="Overview of the tool" title="Overview of the tool">
+
 ## Tool detail
 ###	Function of the tool
 Our tool consists of the following components:
