@@ -11,6 +11,11 @@ app = Flask(__name__)
 clf = joblib.load('ocsvm_gt.pkl')
 base_dummies = pd.read_csv('data_dummies.csv')
 
+# add start by gam
+df_admin = pd.read_csv("./admin.csv")
+df_cmd = pd.read_csv("./command.csv")
+# add end
+
 
 # If you run this code on the other computer, you might need to remove commentout below.
 # Sometimes mode.predict function does not load correctly.
@@ -32,7 +37,9 @@ def preds():
 
     # To specify parameter as Object
     inputLog = InputLog.InputLog(datetime, eventid, accountname, clientaddr, servicename, processname, objectname)
-    sig_result = SignatureDetector.signature_detect(inputLog)
+    # update start by gam
+    sig_result = SignatureDetector.signature_detect(inputLog,df_admin,df_cmd)
+    # update end
     clientaddr = inputLog.get_clientaddr()
 
     if sig_result == 'attack':
