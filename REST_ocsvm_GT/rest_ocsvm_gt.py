@@ -12,8 +12,8 @@ clf = joblib.load('ocsvm_gt.pkl')
 base_dummies = pd.read_csv('data_dummies.csv')
 
 # add start by gam
-df_admin = pd.read_csv("./admin.csv")
-df_cmd = pd.read_csv("./command.csv")
+SignatureDetector.df_admin = pd.read_csv("./admin.csv")
+SignatureDetector.df_cmd = pd.read_csv("./command.csv")
 # add end
 
 
@@ -38,7 +38,7 @@ def preds():
     # To specify parameter as Object
     inputLog = InputLog.InputLog(datetime, eventid, accountname, clientaddr, servicename, processname, objectname)
     # update start by gam
-    sig_result = SignatureDetector.signature_detect(inputLog,df_admin,df_cmd)
+    sig_result = SignatureDetector.signature_detect(inputLog)
     # update end
     clientaddr = inputLog.get_clientaddr()
 
