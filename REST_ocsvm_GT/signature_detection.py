@@ -28,7 +28,7 @@ class SignatureDetector:
         print("is_attack called")
 
     @staticmethod
-    def signature_detect(datetime, eventid, accountname, clientaddr, servicename, processname, objectname):
+    def signature_detect(datetime, eventid, accountname, clientaddr, servicename, processname, objectname,sharedname):
         """ Detect attack using signature based detection.
         :param datetime: Datetime of the event
         :param eventid: EventID
@@ -40,7 +40,7 @@ class SignatureDetector:
         :return : True(1) if attack, False(0) if normal
         """
 
-        inputLog = InputLog.InputLog(datetime, eventid, accountname, clientaddr, servicename, processname, objectname)
+        inputLog = InputLog.InputLog(datetime, eventid, accountname, clientaddr, servicename, processname, objectname,sharedname)
         return SignatureDetector.signature_detect(inputLog)
 
     @staticmethod

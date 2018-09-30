@@ -34,9 +34,10 @@ def preds():
     servicename = request.form.get('service',None)
     processname = request.form.get('process',None)
     objectname = request.form.get('objectname',None)
+    sharedname = request.form.get('sharedname',None)
 
     # To specify parameter as Object
-    inputLog = InputLog.InputLog(datetime, eventid, accountname, clientaddr, servicename, processname, objectname)
+    inputLog = InputLog.InputLog(datetime, eventid, accountname, clientaddr, servicename, processname, objectname,sharedname)
     # update start by gam
     sig_result = SignatureDetector.signature_detect(inputLog)
     # update end
