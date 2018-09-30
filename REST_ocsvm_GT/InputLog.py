@@ -8,10 +8,11 @@ class InputLog:
     __servicename=""
     __processname=""
     __objectname=""
+    __sharedname=""
     __timecnt=0
     __isattack=False
 
-    def __init__(self, datetime, eventid, accountname, clientaddr, servicename, processname, objectname):
+    def __init__(self, datetime, eventid, accountname, clientaddr, servicename, processname, objectname, sharedname):
         self.__datetime = datetime
         self.__eventid=eventid
         self.__accountname=accountname
@@ -19,6 +20,7 @@ class InputLog:
         self.__servicename=servicename
         self.__processname=processname
         self.__objectname=objectname
+        self.__sharedname=sharedname
 
         #print(self.__datetime+","+str(self.__eventid)+", "+self.__accountname+", "+self.__clientaddr+""+self.__servicename+""+self.__processname+""+self.__objectname)
 
@@ -45,3 +47,6 @@ class InputLog:
 
     def get_objectname(self):
         return self.__objectname
+
+    def get_sharedname(self):
+        return self.__sharedname
