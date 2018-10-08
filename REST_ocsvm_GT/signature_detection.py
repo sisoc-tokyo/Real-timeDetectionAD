@@ -103,6 +103,13 @@ class SignatureDetector:
 
     @staticmethod
     def isSuspiciousProcess(inputLog):
+
+        logs = SignatureDetector.df[(SignatureDetector.df.accountname == inputLog.get_accountname())
+                                    & (SignatureDetector.df.eventid == SignatureDetector.EVENT_ST)
+                                    ]
+        clientaddr=logs.tail(1).clientaddr.values[0]
+        inputLog.set_clientaddr(clientaddr)
+
         if inputLog.get_processname().find(SignatureDetector.SYSTEM_DIR)==-1:
             print("Suspicious process")
             return True
@@ -136,7 +143,7 @@ SignatureDetector.df_admin = pd.read_csv("./admin.csv")
 SignatureDetector.df_cmd = pd.read_csv("./command.csv")
 
 
-csv_file = io.open("./log_attack3.csv", mode="r", encoding="utf-8")
+csv_file = io.open("./log2.csv", mode="r", encoding="utf-8")
 f = csv.DictReader(csv_file, delimiter=",", doublequote=True, lineterminator="\r\n", quotechar='"', skipinitialspace=True)
 for row in f:
     datetime=row.get("datetime")
@@ -151,6 +158,7 @@ for row in f:
     # To specify parameter as Object
     inputLog = InputLog.InputLog(datetime, eventid, accountname, clientaddr, servicename, processname, objectname,sharedname)
     print(SignatureDetector.signature_detect(inputLog))
+    #print(inputLog.get_clientaddr())
 
     # To specify parameter as string text
     #SignatureDetector.signature_detect(datetime, eventid, accountname, clientaddr, servicename, processname, objectname);
