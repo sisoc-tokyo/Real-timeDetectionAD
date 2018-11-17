@@ -107,8 +107,12 @@ class SignatureDetector:
         logs = SignatureDetector.df[(SignatureDetector.df.accountname == inputLog.get_accountname())
                                     & (SignatureDetector.df.eventid == SignatureDetector.EVENT_ST)
                                     ]
-        clientaddr=logs.tail(1).clientaddr.values[0]
-        inputLog.set_clientaddr(clientaddr)
+        latestlog=logs.tail(1)
+        if(len(latestlog)>0):
+            clientaddr=latestlog.clientaddr.values[0]
+            inputLog.set_clientaddr(clientaddr)
+
+        #print(inputLog.get_clientaddr()+","+inputLog.get_accountname())
 
         if inputLog.get_processname().find(SignatureDetector.SYSTEM_DIR)==-1:
             print("Suspicious process")
@@ -133,36 +137,4 @@ class SignatureDetector:
             return True
 
         return False
-
-
-SignatureDetector.df = pd.read_csv("./logs.csv")
-#print(SignatureDetector.df)
-
-SignatureDetector.df_admin = pd.read_csv("./admin.csv")
-
-SignatureDetector.df_cmd = pd.read_csv("./command.csv")
-
-
-csv_file = io.open("./log2.csv", mode="r", encoding="utf-8")
-f = csv.DictReader(csv_file, delimiter=",", doublequote=True, lineterminator="\r\n", quotechar='"', skipinitialspace=True)
-for row in f:
-    datetime=row.get("datetime")
-    eventid=row.get("eventid")
-    accountname=row.get("accountname").lower()
-    clientaddr=row.get("clientaddr")
-    servicename=row.get("servicename").lower()
-    processname=row.get("processname").lower()
-    objectname=row.get("objectname").lower()
-    sharedname = row.get("sharedname").lower()
-
-    # To specify parameter as Object
-    inputLog = InputLog.InputLog(datetime, eventid, accountname, clientaddr, servicename, processname, objectname,sharedname)
-    print(SignatureDetector.signature_detect(inputLog))
-    #print(inputLog.get_clientaddr())
-
-    # To specify parameter as string text
-    #SignatureDetector.signature_detect(datetime, eventid, accountname, clientaddr, servicename, processname, objectname);
-
-
-#print(SignatureDetector.df)
 
