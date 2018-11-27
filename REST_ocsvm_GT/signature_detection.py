@@ -55,6 +55,7 @@ class SignatureDetector:
         #SignatureDetector.df["accountname"] = SignatureDetector.df["accountname"].str.lower()
 
         is_attack=False
+        is_mal_cmd=False
 
         if (inputLog.get_eventid()==SignatureDetector.EVENT_ST) :
             is_attack=SignatureDetector.hasNoTGT(inputLog)
@@ -65,7 +66,7 @@ class SignatureDetector:
         elif (inputLog.get_eventid() == SignatureDetector.EVENT_PRIV_OPE
                 or inputLog.get_eventid() == SignatureDetector.EVENT_PRIV_SERVICE
                 or inputLog.get_eventid() == SignatureDetector.EVENT_PROCESS):
-            is_attack = SignatureDetector.isSuspiciousProcess(inputLog)
+            is_mal_cmd = SignatureDetector.isSuspiciousProcess(inputLog)
 
         elif (inputLog.get_eventid() == SignatureDetector.EVENT_SHARE):
             is_attack =SignatureDetector.isAdminshare(inputLog)
@@ -74,7 +75,9 @@ class SignatureDetector:
                       inputLog.get_servicename(),inputLog.get_processname(),inputLog.get_objectname()], index=SignatureDetector.df.columns)
         SignatureDetector.df=SignatureDetector.df.append(series, ignore_index = True)
 
-        if is_attack:
+        if is_mal_cmd:
+            return "pro_attack"
+        elif is_attack:
             return "attack"
         else:
             return "normal"
