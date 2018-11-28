@@ -187,25 +187,23 @@ public class AuthLogParser {
 							}
 						} else if (elem.contains("オブジェクト名:") || elem.contains("Object Name:")) {
 							objectName = parseElement(elem, ":", 2).toLowerCase();
+							if (!objectName.contains(PSEXESVC)) {
+								objectName="";
+							} 
 						} else if ((elem.contains("プロセス名:") || elem.contains("Process Name:"))) {
 							// プロセス名は":"が含まれることがあることを考慮
 							processName = parseElement(elem, ":", 2).toLowerCase();
 							if (removeNoise) {
 								// Remove noise
 								boolean isNoise = false;
-								/*
 								if (processName.equals(SYSTEM_DIR+"\\services.exe")) {
-									if (objectName.contains(PSEXESVC)) {
-										processName = objectName;
-									} else {
-										isNoise = true;
-									}
-								} */
+								} 
 								if (processName.equals(SYSTEM_DIR+"\\lsass.exe")) {
 									isNoise = true;
 								} 
 								if (isNoise) {
 									// Remove services.exe
+									objectName="";
 									processName = "";
 									continue;
 								}
