@@ -7,6 +7,9 @@ from machine_learning import ML
 from signature_detection import SignatureDetector
 import InputLog
 import send_alert
+
+DOMAIN_NAME='example.com'
+
 app = Flask(__name__)
 
 clf_4674 = joblib.load('ocsvm_gt_4674.pkl')
@@ -26,6 +29,7 @@ SignatureDetector.df_cmd = pd.read_csv("./command.csv")
 
 @app.route('/preds', methods=['POST'])
 def preds():
+    global DOMAIN_NAME
     # loading
     response = jsonify()
     datetime = request.form.get('datetime',None)
@@ -42,10 +46,9 @@ def preds():
     if org_accountname != None:
         accountname = org_accountname.strip("'")
         accountname = accountname.lower()
-        if accountname=='dcexample.com':
-            print("before:"+org_accountname)
         accountname = accountname.split('@')[0]
-
+        if (accountname.find(DOMAIN_NAME)> -1 or len(accountname)==0):
+            return SignatureDetector.RESULT_NORMAL
     if clientaddr != None:
         clientaddr = clientaddr.strip("'")
     if servicename != None:
