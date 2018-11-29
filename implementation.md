@@ -1,9 +1,9 @@
 # Real-time detection tool of attacks leveraging Domain Administrator privilege
 
 ## How to implement the tool
-###	Function of the tool
-Our tool consists of the following components:
-* Detection Server: Detects attack activities leveraging Domain Administrator privileges using signature based detection and Machine Learning.  Detection programs are implemented by Web API.
+###	Tool detail
+* <a href="tree/master/detectionTools">Detection tools</a>
+    * rest_ocsvm_gt.py: REST API for detection. It is called by Logstash.
 * Log Server:  Log Server is implemented using Elactic Stack. It collects the Domain Controller’s Event logs in real-time and provide log search and visualization.
 
 1.	If someone access to the Domain Controller including attacks, activities are recorded in the Event log.
