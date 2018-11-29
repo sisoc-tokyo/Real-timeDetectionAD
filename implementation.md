@@ -2,8 +2,18 @@
 
 ## How to implement the tool
 ###	Tool detail
-* <a href="tree/master/detectionTools">Detection tools</a>
-    * rest_ocsvm_gt.py: REST API for detection. It is called by Logstash.
+* <a href="https://github.com/sisoc-tokyo/Real-timeDetectionAD/tree/master/detectionTools">Detection tools</a>
+    * Files
+            * rest_ocsvm_gt.py: REST API for detection. It is called by Logstash.
+            * signature_detection.py: Signature-based detection program. It is called by rest_ocsvm_gt.py.
+            * machine_learning.py: Machine learning detection program. It is called by rest_ocsvm_gt.py.
+            * send_alert.py: Program for sending alert mail. It is called by rest_ocsvm_gt.py.
+            * create_model.py: Program for creating dataset
+            * .pkl files: 
+            * data_dummies_XXXX.csv: Sample dataset
+    * Location: Deploy on Detection Server
+    * How to use: launch rest_ocsvm_gt.py 
+    
 * Log Server:  Log Server is implemented using Elactic Stack. It collects the Domain Controller’s Event logs in real-time and provide log search and visualization.
 
 1.	If someone access to the Domain Controller including attacks, activities are recorded in the Event log.
