@@ -4,13 +4,13 @@
 ###	Tool detail
 * <a href="https://github.com/sisoc-tokyo/Real-timeDetectionAD/tree/master/detectionTools">Detection tools</a>
     * Files
-            * rest_ocsvm_gt.py: REST API for detection. It is called by Logstash.
-            * signature_detection.py: Signature-based detection program. It is called by rest_ocsvm_gt.py.
-            * machine_learning.py: Machine learning detection program. It is called by rest_ocsvm_gt.py.
-            * send_alert.py: Program for sending alert mail. It is called by rest_ocsvm_gt.py.
-            * create_model.py: Program for creating dataset
-            * .pkl files: 
-            * data_dummies_XXXX.csv: Sample dataset
+        * rest_ocsvm_gt.py: REST API for detection. It is called by Logstash.
+        * signature_detection.py: Signature-based detection program. It is called by rest_ocsvm_gt.py.
+        * machine_learning.py: Machine learning detection program. It is called by rest_ocsvm_gt.py.
+        * send_alert.py: Program for sending alert mail. It is called by rest_ocsvm_gt.py.
+        * create_model.py: Program for creating dataset
+        * .pkl files: 
+        * data_dummies_XXXX.csv: Sample dataset
     * Location: Deploy on Detection Server
     * How to use: launch rest_ocsvm_gt.py 
     
