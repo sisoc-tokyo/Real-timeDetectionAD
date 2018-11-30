@@ -13,8 +13,15 @@
         * data_dummies_XXXX.csv: Sample dataset
     * Location: Deploy on Detection Server
     * How to use: launch rest_ocsvm_gt.py 
-    
-* Log Server:  Log Server is implemented using Elactic Stack. It collects the Domain Controller’s Event logs in real-time and provide log search and visualization.
+    * Notes: REST API is running on Flask.
+
+* <a href="https://github.com/sisoc-tokyo/Real-timeDetectionAD/tree/master/logstash">Configuration files of Log Server</a>
+    * Files
+        * logstash_winlogbeat.conf: Configuration file of Logstash. Logs are sent through the pipline of Logstash. Logstash extract data for detection from logs and call the REST API "rest_ocsvm_gt.py". <br/>
+    * Location: Log Server
+    * How to use: Launch Logstash by specifing the conf file.<br/>
+	 e.g.）logstash -f /etc/logstash/conf.d/logstash_winlogbeat.conf &<br/>
+	 
 
 1.	If someone access to the Domain Controller including attacks, activities are recorded in the Event log.
 2.	Each Event Log is sent to Logstash  in real-time by Winlogbeat.<br>
