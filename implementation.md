@@ -18,10 +18,19 @@
 * <a href="https://github.com/sisoc-tokyo/Real-timeDetectionAD/tree/master/logstash">Configuration files of Log Server</a>
     * Files
         * logstash_winlogbeat.conf: Configuration file of Logstash. Logs are sent through the pipline of Logstash. Logstash extract data for detection from logs and call the REST API "rest_ocsvm_gt.py". <br/>
-    * Location: Log Server
+    * Location: Deploy on Log Server
     * How to use: Launch Logstash by specifing the conf file.<br/>
 	 e.g.）logstash -f /etc/logstash/conf.d/logstash_winlogbeat.conf &<br/>
 	 
+* <a href="https://github.com/sisoc-tokyo/Real-timeDetectionAD/tree/master/learningTools">Learning tools</a>
+    * Files
+        * Goldenticket_One-class_SVM.ipynb : A Python program runnung on the Jupyter Notebook for learning dataset .
+        * ADLogParserForML: Java programs to prepare for creating input for Goldenticket_One-class_SVM.ipynb. This programs extract data from Event Logs exported as CSV files.
+            * Location: Deploy on Detection Server
+    * How to use: 
+        1.  Export Domain Controller Event logs as CSV file format using built-in Windows function (Rigiht click Event Logs and save as csv file).
+        2.  Execute ADLogParserForML using the above Event Logs as inputs.
+    * Notes: REST API is running on Flask.
 
 1.	If someone access to the Domain Controller including attacks, activities are recorded in the Event log.
 2.	Each Event Log is sent to Logstash  in real-time by Winlogbeat.<br>
