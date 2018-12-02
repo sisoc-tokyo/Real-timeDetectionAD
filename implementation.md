@@ -37,6 +37,7 @@
     * Location: Deploy on Detection Server
     * How to use: 
         1. Export Domain Controller Event logs as CSV file format using built-in Windows function (Rigiht click Event Logs and save as csv file).
+        
         2. Execute ADLogParserForML using the above Event Logs as inputs. Then parsed csv file (eventlog.csv) will be created.<br/>
         <pre>
         # cd ADLogParserForML/bin
