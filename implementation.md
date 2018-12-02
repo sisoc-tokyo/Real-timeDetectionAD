@@ -53,6 +53,8 @@
           
         4. Execute One-class_SVM.ipynb. You should specify the file path of eventlog.csv. <br/>
             You will get model files (ocsvm_gt_XXXX.pkl) and One-Hot encoding dummy files (data_dummies_XXXX.csv).
+            
+        5. If you want to see detection result, please check X_outliers_resultXXXX.csv, X_test_resultXXXX.csv and X_ourlier_resultXXXX.csv files.The rightmost column shows result, "1" means normal and "-1" means outlier.
 
 
   
