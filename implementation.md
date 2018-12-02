@@ -8,70 +8,51 @@
         * signature_detection.py: Signature-based detection program. It is called by rest_ocsvm_gt.py.
         * machine_learning.py: Machine learning detection program. It is called by rest_ocsvm_gt.py.
         * send_alert.py: Program for sending alert mail. It is called by rest_ocsvm_gt.py.
-        * create_model.py: Program for creating dataset
-        * .pkl files: 
-        * data_dummies_XXXX.csv: Sample dataset
+        * ocsvm_gt_XXXX.pkl files: Model files. They are created by Goldenticket_One-class_SVM.ipynb
+        * data_dummies_XXXX.csv: One-Hot encoding dummy files. They are created by Goldenticket_One-class_SVM.ipynb
     * Location: Deploy on Detection Server
     * How to use: launch rest_ocsvm_gt.py 
     * Notes: REST API is running on Flask.
 
-* <a href="https://github.com/sisoc-tokyo/Real-timeDetectionAD/tree/master/logstash">Configuration files of Log Server</a>
+* <a href="https://github.com/sisoc-tokyo/Real-timeDetectionAD/tree/master/logstash">Configuration files for Logstash</a>
     * Files
-        * logstash_winlogbeat.conf: Configuration file of Logstash. Logs are sent through the pipline of Logstash. Logstash extract data for detection from logs and call the REST API "rest_ocsvm_gt.py". <br/>
+        * logstash_winlogbeat.conf: Configuration file of Logstash. Logs are sent through the pipline of Logstash. Logstash extract data for detection from logs and call the REST API "rest_ocsvm_gt.py".<br/>
+        This file should be located in Log Server where Logstash is running. 
     * Location: Deploy on Log Server
-    * How to use: Launch Logstash by specifing the conf file.<br/>
-	 e.g.）logstash -f /etc/logstash/conf.d/logstash_winlogbeat.conf &<br/>
-	 
+    * How to use: 
+        * Launch Logstash by specifing the conf file.<br/>
+	    e.g.）logstash -f /etc/logstash/conf.d/logstash_winlogbeat.conf &<br/>
+
+* <a href="https://github.com/sisoc-tokyo/Real-timeDetectionAD/tree/master/winlogbeat">Configuration files for Winlogbeat</a>
+    * Files
+        * winlogbeat.yml: Configuration file of Winlogbeat. This file should be located in Domain Controller where Winlogbeat is running. 
+    * Location: Place in the install directory of Winlogbeat on Domain Controller
+    * How to use: 
+	    * Star Winlogbeat on Domain Controller
+ 
 * <a href="https://github.com/sisoc-tokyo/Real-timeDetectionAD/tree/master/learningTools">Learning tools</a>
     * Files
-        * Goldenticket_One-class_SVM.ipynb : A Python program runnung on the Jupyter Notebook for learning dataset .
         * ADLogParserForML: Java programs to prepare for creating input for Goldenticket_One-class_SVM.ipynb. This programs extract data from Event Logs exported as CSV files.
-            * Location: Deploy on Detection Server
+        * Goldenticket_One-class_SVM.ipynb : A Python program runnung on the Jupyter Notebook to create model and calculate detection rate.
+    * Location: Deploy on Detection Server
     * How to use: 
-        1.  Export Domain Controller Event logs as CSV file format using built-in Windows function (Rigiht click Event Logs and save as csv file).
-        2.  Execute ADLogParserForML using the above Event Logs as inputs.
-    * Notes: REST API is running on Flask.
+        1. Export Domain Controller Event logs as CSV file format using built-in Windows function (Rigiht click Event Logs and save as csv file).
+        2. Execute ADLogParserForML using the above Event Logs as inputs. Then parsed csv file (eventlog.csv) will be created.<br/>
+        <pre>
+        # cd ADLogParserForML/bin
+        # java logparse/AuthLogParser /Users/Documents/tmp/input /Users/marikof/Documents/tmp/output  /Users/Documents/tmp/input/command.txt /Users/marikof/Documents/tmp/input/adminlist.txt
+        </pre>
+        3. If you want to eveluate the detection rate, organize the value of "target" column as follows.
+            * train
+            * test
+            * outlier
+                        
+            "train" data is training data and should be in normal states. Machine learning learns these data.
+            "test" data means normal data. Machine lerning doe's not learn these data, they are used only for evaluation. Please change some target value from "train" to "test".
+            "outlier" data means outlier data. Machine lerning doe's not learn these data, they are used only for evaluation. Please change some target value from "train" to "outlier" and change its account value and process value to other. You can also conducte unusual behavior to create outlier logs.
+          
+        4. Execute One-class_SVM.ipynb. You should specify the file path of eventlog.csv. <br/>
+            You will get model files (ocsvm_gt_XXXX.pkl) and One-Hot encoding dummy files (data_dummies_XXXX.csv).
 
-1.	If someone access to the Domain Controller including attacks, activities are recorded in the Event log.
-2.	Each Event Log is sent to Logstash  in real-time by Winlogbeat.<br>
-Logstash extracts input data from the Event log, then call the detection API on Detection Server.
-3.	Detection API is launched. Firstly, analyze the log with signature detection.
-4.	Next analyze the log with machine learning.
-5.	If attack is detected, judge the log is recorded by attack activities.<br>
-Send alert E-mail to the security administrator, and add a flag indicates attack to the log .
-6.	Transfer the log to Elasticsearch . 
-
-###	Input of the tools: Event logs of the Domain Controller. 
-* 4672: An account assigned with special privileges logged on.
-* 4674: An operation was attempted on a privileged object
-* 4688: A new process was created
-* 4768: A Kerberos authentication ticket (TGT) was requested
-* 4769: A Kerberos service ticket was requested
-* 5140: A network share object was accessed
-
-###	Output (result) of the tool
-* Distinguish logs recorded by attack activities from logs recorded by normal operations, and identity infected computers and accounts. <br>
-The detection result can be checked using Kibana.
-* If attacks are detected, send email alerts to the specific E-mail address.
-
-###	System Requirements
-We tested our tool in the following environment.
-
-* Domain Controller (Windows 2008R2)
-    * Winlogbeat(5.4.2): Open-source log analysis platform
-* Log Server: Open-source tools + Logstash pipeline
-     * OS: CentOS 7
-    * Logstash(6.5.0): Parse logs, launch the detection program, transfer logs to Elastic Search
-    * Elastic Search(6.5.0): Collects logs and provides API interface for log detection
-    * Kibana(6.5.0): Visualizes the detection results
-* Detection Server: Custom detection programs
-     * OS: CentOS 7
-     * Python: 3.6.0
-     * Flask: 0.12
-     * scikit-learn: 0.19.1
-     
-
-###	How to implement
-<a href="">See implementation method</a>
 
   
