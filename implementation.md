@@ -48,8 +48,8 @@
             * test
             * outlier
                         
-            "train" data is training data and should be in normal states. Machine learning learns these data.
-            "test" data means normal data. Machine lerning doe's not learn these data, they are used only for evaluation. Please change some target value from "train" to "test".
+            "train" data is training data and should be in normal states. Machine learning learns these data.<br/>
+            "test" data means normal data. Machine lerning doe's not learn these data, they are used only for evaluation. Please change some target value from "train" to "test".<br/>
             "outlier" data means outlier data. Machine lerning doe's not learn these data, they are used only for evaluation. Please change some target value from "train" to "outlier" and change its account value and process value to other. You can also conducte unusual behavior to create outlier logs.
           
         4. Execute One-class_SVM.ipynb. You should specify the file path of eventlog.csv. <br/>
