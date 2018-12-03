@@ -21,9 +21,9 @@ class ML:
         objectname = 'objectname_' + str(objectname)
         new_data.append(objectname)
 
-        base_df_4674 = pd.DataFrame(columns=base_dummies_4674.columns[1:-1])
+        base_df_4674 = pd.DataFrame(columns=base_dummies_4674.columns[1:-3])
         base_df_4674.loc[0] = 0
-        base_df_4688 = pd.DataFrame(columns=base_dummies_4688.columns[1:-1])
+        base_df_4688 = pd.DataFrame(columns=base_dummies_4688.columns[1:-3])
         base_df_4688.loc[0] = 0
 
         if accountname not in base_df_4674.columns and accountname not in base_df_4688.columns:

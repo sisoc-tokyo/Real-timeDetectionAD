@@ -2,11 +2,11 @@ import smtplib
 from email.mime.text import MIMEText
 from email.utils import formatdate
 
-FROM_ADDRESS = 'stix2xestest@gmail.com'
-MY_PASSWORD = 'testPassw0rd!'
-TO_ADDRESS = 'coeutokyo@gmail.com'
+FROM_ADDRESS = 'change here'
+MY_PASSWORD = 'change here'
+TO_ADDRESS = 'change here'
 BCC = ''
-SUBJECT = 'Suspicious activity was detected.'
+SUBJECT = 'change here'
 
 class Send_alert:
 
