@@ -21,7 +21,7 @@ class SignatureDetector:
     RESULT_CMD="attack: command on blackList is used"
     RESULT_MAL_CMD = "attack: Abnormal command or tool is used"
     RESULT_ADMINSHARE = "attack: Admin share is used"
-    RESULT_NOTGT="attack: Suspicious authentication(no TGT)"
+    RESULT_NOTGT="attack: Golden Ticket is used"
 
     df=pd.DataFrame(data=None, index=None, columns=["datetime","eventid","accountname","clientaddr","servicename","processname","objectname"], dtype=None, copy=False)
     df_admin = pd.DataFrame(data=None, index=None, columns=[ "accountname"], dtype=None, copy=False)

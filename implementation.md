@@ -32,7 +32,8 @@
  
 * <a href="https://github.com/sisoc-tokyo/Real-timeDetectionAD/tree/master/learningTools">Learning tools</a>
     * Files
-        * ADLogParserForML: Java programs to prepare for creating input for Goldenticket_One-class_SVM.ipynb. This programs extract data from Event Logs exported as CSV files.
+        * ADLogParserForML: Java programs to prepare for creating input for Goldenticket_One-class_SVM.ipynb. This programs extract data from Event Logs exported as CSV files.<br/>
+        We tested this program on Java 1.8 .
         * Goldenticket_One-class_SVM.ipynb : A Python program runnung on the Jupyter Notebook to create model and calculate detection rate.
     * Location: Deploy on Detection Server
     * How to use: 

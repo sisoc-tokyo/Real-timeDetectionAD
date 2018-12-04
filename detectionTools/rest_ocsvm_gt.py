@@ -7,10 +7,30 @@ from machine_learning import ML
 from signature_detection import SignatureDetector
 import InputLog
 import send_alert
+import pickle
+import os
 
 DOMAIN_NAME='example.com'
+log='logs.pickle'
 
-app = Flask(__name__)
+class MyFlask (Flask):
+    def __init__(self, import_name, static_path=None, static_url_path=None,
+                 static_folder='static', template_folder='templates',
+                 instance_path=None, instance_relative_config=False):
+        Flask.__init__(self, import_name, static_path, static_url_path,
+                       static_folder, template_folder,
+                       instance_path, instance_relative_config)
+
+        print('init called')
+        if os.path.exists(log)==True:
+            with open(log, mode='rb') as f:
+                SignatureDetector.df=pickle.load(f)
+
+    def __del__(self):
+        print('destructor called')
+
+
+app = MyFlask(__name__)
 
 clf_4674 = joblib.load('ocsvm_gt_4674.pkl')
 base_dummies_4674 = pd.read_csv('data_dummies_4674.csv')
@@ -77,10 +97,15 @@ def preds():
 
     if (result == SignatureDetector.RESULT_CMD or result == SignatureDetector.RESULT_MAL_CMD):
         result = ML.preds(eventid, accountname, processname, objectname, base_dummies_4674, clf_4674, base_dummies_4688, clf_4688)
-    # if (result != SignatureDetector.RESULT_NORMAL and result != ML.RESULT_WARN):
-    #     send_alert.Send_alert(result, datetime, eventid, accountname, clientaddr, servicename, processname, objectname, sharedname)
+    if (result != SignatureDetector.RESULT_NORMAL and result != ML.RESULT_WARN):
+        send_alert.Send_alert(result, datetime, eventid, accountname, clientaddr, servicename, processname, objectname, sharedname)
 
     return result
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    try:
+        app.run(host='0.0.0.0')
+    finally:
+        print('finally called')
+        with open(log, mode='wb') as handle:
+            pickle.dump(SignatureDetector.df, handle, protocol=pickle.HIGHEST_PROTOCOL)
