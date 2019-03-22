@@ -2,6 +2,8 @@ import csv
 import io
 import pandas as pd
 import InputLog
+import dateutil.parser
+import time
 
 class SignatureDetector:
 
@@ -16,14 +18,17 @@ class SignatureDetector:
     SYSTEM_DIR2 = "c:\program files";
     PSEXESVC = "psexesvc";
     ADMINSHARE="\c$"
+    ADMINSHARE_2 = "admin$"
+    IPC = "\ipc$"
     RESULT_NORMAL="normal"
     RESULT_PRIV="attack: Unexpected privilege is used"
     RESULT_CMD="attack: command on blackList is used"
     RESULT_MAL_CMD = "attack: Abnormal command or tool is used"
     RESULT_ADMINSHARE = "attack: Admin share is used"
     RESULT_NOTGT="attack: Golden Ticket is used"
+    RESULT_ROMANCE = "attack: Eternal Romance is used"
 
-    df=pd.DataFrame(data=None, index=None, columns=["datetime","eventid","accountname","clientaddr","servicename","processname","objectname"], dtype=None, copy=False)
+    df=pd.DataFrame(data=None, index=None, columns=["datetime","eventid","accountname","clientaddr","servicename","processname","objectname","sharename"], dtype=None, copy=False)
     df_admin = pd.DataFrame(data=None, index=None, columns=[ "accountname"], dtype=None, copy=False)
     df_cmd = pd.DataFrame(data=None, index=None, columns=["processname"], dtype=None, copy=False)
 
@@ -57,7 +62,7 @@ class SignatureDetector:
         :return : True(1) if attack, False(0) if normal
         """
 
-        #print(SignatureDetector.df)
+        print(SignatureDetector.df)
 
         #SignatureDetector.df["accountname"] = SignatureDetector.df["accountname"].str.lower()
 
@@ -77,15 +82,17 @@ class SignatureDetector:
 
         elif (inputLog.get_eventid() == SignatureDetector.EVENT_SHARE):
             result =SignatureDetector.isAdminshare(inputLog)
+            result = SignatureDetector.isEternalRomace(inputLog)
 
         series = pd.Series([inputLog.get_datetime(),inputLog.get_eventid(),inputLog.get_accountname(),inputLog.get_clientaddr(),
-                      inputLog.get_servicename(),inputLog.get_processname(),inputLog.get_objectname()], index=SignatureDetector.df.columns)
+                      inputLog.get_servicename(),inputLog.get_processname(),inputLog.get_objectname(), inputLog.get_sharedname()], index=SignatureDetector.df.columns)
         SignatureDetector.df=SignatureDetector.df.append(series, ignore_index = True)
 
         return result
 
     @staticmethod
     def hasNoTGT(inputLog):
+        time.sleep(1)
         SignatureDetector.df["eventid"]=SignatureDetector.df["eventid"].astype(str)
         logs=SignatureDetector.df[(SignatureDetector.df.accountname == inputLog.get_accountname())
                                   &(SignatureDetector.df.clientaddr==inputLog.get_clientaddr())
@@ -140,6 +147,33 @@ class SignatureDetector:
         if inputLog.get_sharedname().find(SignatureDetector.ADMINSHARE)>=0:
             print("Signature C: " + SignatureDetector.RESULT_ADMINSHARE)
             return SignatureDetector.RESULT_ADMINSHARE
+
+        return SignatureDetector.RESULT_NORMAL
+
+    @staticmethod
+    def isEternalRomace(inputLog):
+        time.sleep(1)
+        # share name is 'IPC' and account is computer account
+        if (inputLog.get_sharedname().find(SignatureDetector.IPC)>=0 and inputLog.get_accountname().endswith("$")):
+                # Check whether admin share with computer account is used within 2 seconds
+            logs = SignatureDetector.df[SignatureDetector.df.accountname.str.endswith("$")]
+            logs = logs[(SignatureDetector.df.clientaddr == inputLog.get_clientaddr())
+                        & ((SignatureDetector.df.sharename.str.endswith(SignatureDetector.ADMINSHARE)
+                        |SignatureDetector.df.sharename.str.endswith(SignatureDetector.ADMINSHARE_2)))]
+
+            if len(logs) > 0:
+                now=dateutil.parser.parse(inputLog.get_datetime())
+                last_date=dateutil.parser.parse(logs.tail(1).datetime.str.cat())
+                diff=(now-last_date).total_seconds()
+                if(diff<2):
+                    print("Signature E: " + SignatureDetector.RESULT_ROMANCE)
+                    return SignatureDetector.RESULT_ROMANCE
+
+            if (inputLog.get_sharedname().find(SignatureDetector.ADMINSHARE)>=0 or inputLog.get_sharedname().find(SignatureDetector.ADMINSHARE_2)>=0):
+                # account name ends with '$'
+                if (inputLog.get_accountname().endswith("$")):
+                    print("")
+
 
         return SignatureDetector.RESULT_NORMAL
 
