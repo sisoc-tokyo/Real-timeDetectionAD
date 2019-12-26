@@ -2,11 +2,13 @@ import smtplib
 from email.mime.text import MIMEText
 from email.utils import formatdate
 
-FROM_ADDRESS = 'change here'
-MY_PASSWORD = 'change here'
-TO_ADDRESS = 'change here'
+FROM_ADDRESS = 'coeutokyo@gmail.com'
+#FROM_ADDRESS = 'fmariko1008@gmail.com'
+MY_PASSWORD = 'utokyoPassw0rd!'
+#MY_PASSWORD='Kitri0712!'
+TO_ADDRESS = 'coeutokyo@gmail.com'
 BCC = ''
-SUBJECT = 'change here'
+SUBJECT = 'Attack detected'
 
 class Send_alert:
 
